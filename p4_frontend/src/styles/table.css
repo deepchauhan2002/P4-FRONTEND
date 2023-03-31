@@ -48,6 +48,7 @@ table {
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-start;
+    margin-left:90px;
     margin-bottom: 20px;
   }
   
