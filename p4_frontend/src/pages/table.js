@@ -7,6 +7,7 @@ const Table = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [filterStatus, setFilterStatus] = useState("");
   const [filterLocation, setFilterLocation] = useState("");
+  const [filterDestination, setFilterDestination] = useState("")
   const [editingRow, setEditingRow] = useState(null);
 
   useEffect(() =>{
@@ -32,8 +33,12 @@ const Table = () => {
   };
 
   const handleLocationFilter = (event) => {
-    setFilterLocation(event.target.value);
+    setFilterLocation(event.target.value)
   };
+
+  const handleDestinationFilter = (event) => {
+    setFilterDestination(event.target.value)
+  }
 
   const handleUpdateData = (id, field, value) => {
     const newData = [...data];
@@ -56,10 +61,15 @@ const Table = () => {
   const filteredData2 = filterLocation
     ? filteredData.filter(
         (d) =>
-          d.source.toLowerCase() === filterLocation.toLowerCase() ||
-          d.destination.toLowerCase() === filterLocation.toLowerCase()
+        d.source.toLowerCase().startsWith(filterLocation.toLowerCase())
       )
     : filteredData;
+    const filteredData3 = filterDestination
+    ? filteredData2.filter(
+        (d) =>
+          d.destination.toLowerCase().startsWith(filterDestination.toLowerCase())
+      )
+    : filteredData2;
 
   return (
     <div>
@@ -75,12 +85,21 @@ const Table = () => {
             </div>
         </div>
         <div className="filter-box">
-            <span className="filter-text">Filter by Location:</span>
+            <span className="filter-text">Filter by Source:</span>
             <input
             type="text"
-            placeholder="Enter location"
+            placeholder="Enter Source"
             value={filterLocation}
             onChange={handleLocationFilter}
+            />
+        </div>
+        <div className="filter-box">
+            <span className="filter-text">Filter by Destination:</span>
+            <input
+            type="text"
+            placeholder="Enter Destination"
+            value={filterDestination}
+            onChange={handleDestinationFilter}
             />
         </div>
         </div>
@@ -92,13 +111,13 @@ const Table = () => {
             <th>Shipper</th>
             <th>
                 Weight (kg) 
-                <button onClick={() => handleSort("weight")} style={{backgroundColor:'blue',marginLeft:'5px'}}>
+                <button onClick={() => handleSort("weight")} style={{backgroundColor:'grey',marginLeft:'5px'}}>
                     {sortColumn === "weight" ? (sortOrder === "asc" ? "↑" : "↓"):("↓")}
                 </button> 
             </th>
             <th>
                 Cost (₹)
-                <button onClick={() => handleSort("cost")} style={{backgroundColor:'blue',marginLeft:'5px'}}>
+                <button onClick={() => handleSort("cost")} style={{backgroundColor:'grey',marginLeft:'5px'}}>
                     {sortColumn === "cost" ? (sortOrder === "asc" ? "↑" : "↓"):("↓")}
                 </button> 
             </th>
@@ -109,7 +128,7 @@ const Table = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredData2.map((item) => (
+          {filteredData3.map((item) => (
             <tr key={item.id}>
               <td>
                 {editingRow === item.id ? (
